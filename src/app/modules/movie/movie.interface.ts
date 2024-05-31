@@ -10,5 +10,6 @@ export type TMovie = {
   languages: string[];
   description?: string;
   releaseDate: Date;
+  isDeleted: boolean;
   status: 'active' | 'inactive';
 };

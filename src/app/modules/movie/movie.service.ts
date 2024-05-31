@@ -22,9 +22,28 @@ const updateMovieIntroDB = async (
   });
   return result;
 };
+const deleteMovieDB = async (movieId: string) => {
+  const result = await Movie.findOneAndUpdate(
+    { _id: movieId },
+    { isDeleted: true },
+    { new: true }
+  );
+  return result;
+};
+const updateStatusMovieDB = async (movieId: string, payload: string) => {
+  console.log(payload);
+  const result = await Movie.findOneAndUpdate(
+    { _id: movieId },
+    { status: payload },
+    { new: true }
+  );
+  return result;
+};
 export const MovieServices = {
   createMovieIntroDB,
   getAllMovieDB,
   getMovieByIdDB,
   updateMovieIntroDB,
+  deleteMovieDB,
+  updateStatusMovieDB,
 };

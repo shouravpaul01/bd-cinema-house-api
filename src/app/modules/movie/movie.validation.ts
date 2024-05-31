@@ -16,7 +16,6 @@ const createMovieValidationSchema = z.object({
     languages: z.array(z.string()),
     description: z.string().optional(),
     releaseDate: z.string({ required_error: 'The feild is required.' }),
-    status: z.enum(['active', 'inactive']).default('inactive'),
   }),
 });
 const updateMovieValidationSchema = z.object({
@@ -36,7 +35,7 @@ const updateMovieValidationSchema = z.object({
     languages: z.array(z.string()).optional(),
     description: z.string().optional(),
     releaseDate: z.string().optional(),
-    status: z.enum(['active', 'inactive']).optional(),
+    status: z.enum(['active', 'inactive'], { message: 'Invaild Status.' }),
   }),
 });
 export const MovieValidation = {

@@ -41,9 +41,36 @@ const updateMovieIntro = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deleteMovie = catchAsync(async (req, res) => {
+  const { movieId } = req.params;
+  const result = await MovieServices.deleteMovieDB(movieId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Movie Deleted.',
+    data: result,
+  });
+});
+const updateStatusMovie = catchAsync(async (req, res) => {
+  const { movieId } = req.params;
+  const { status } = req.query;
+  console.log(status);
+  const result = await MovieServices.updateStatusMovieDB(
+    movieId,
+    status as string
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Updated Movie Status.',
+    data: result,
+  });
+});
 export const MovieControllers = {
   createMovieIntro,
   getAllMovie,
   getMovieById,
   updateMovieIntro,
+  deleteMovie,
+  updateStatusMovie,
 };

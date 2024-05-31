@@ -44,6 +44,10 @@ const movieSchema = new Schema<TMovie>(
       type: Date,
       required: true,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     status: {
       type: String,
       enum: ['active', 'inactive'],
