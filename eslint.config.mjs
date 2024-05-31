@@ -1,8 +1,9 @@
 import globals from 'globals';
-import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
-
+import eslint from '@eslint/js';
 export default [
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     rules: {
       'no-unused-vars': 'error',
@@ -12,13 +13,6 @@ export default [
       'no-undef': 'error',
     },
     ignores: ['**/node_modules/', '.dist/'],
-    // extends: [
-    //   'eslint:recommended',
-    //   'plugin:@typescript-eslint/recommended',
-    //   'prettier',
-    // ],
     languageOptions: { globals: globals.browser },
   },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
 ];
