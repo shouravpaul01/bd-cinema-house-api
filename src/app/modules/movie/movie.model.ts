@@ -8,9 +8,13 @@ const movieSchema = new Schema<TMovie>(
       required: true,
       unique: true,
     },
-    movieUrl: {
-      type: String,
-      required: true,
+    image: {
+      public_id: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
     },
     category: {
       type: String,

@@ -1,6 +1,9 @@
 export type TMovie = {
   title: string;
-  movieUrl: string;
+  image: {
+    public_id: string;
+    url: string;
+  };
   category: string;
   director: string;
   duration: number;

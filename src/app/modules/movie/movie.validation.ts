@@ -3,10 +3,12 @@ import { z } from 'zod';
 const createMovieValidationSchema = z.object({
   body: z.object({
     title: z.string({ required_error: 'The feild is required.' }),
-    movieUrl: z.string({ required_error: 'The feild is required.' }).url(),
+    image: z.object({}),
     category: z.string({ required_error: 'The feild is required.' }),
     director: z.string({ required_error: 'The feild is required.' }),
-    duration: z.number({ required_error: 'The feild is required.' }),
+    duration: z
+      .number({ required_error: 'The feild is required.' })
+      .int({ message: 'Invaild Duration.' }),
     rating: z
       .number({ required_error: 'The feild is required.' })
       .min(0, { message: 'Invalid Rating.' })
@@ -21,10 +23,10 @@ const createMovieValidationSchema = z.object({
 const updateMovieValidationSchema = z.object({
   body: z.object({
     title: z.string().optional(),
-    movieUrl: z.string().url().optional(),
+    image: z.object({}).optional(),
     category: z.string().optional(),
     director: z.string().optional(),
-    duration: z.number().optional(),
+    duration: z.number().int({ message: 'Invaild Duration.' }).optional(),
     rating: z
       .number({ invalid_type_error: 'Invalid Rating.' })
       .min(0, { message: 'Invalid Rating.' })
@@ -35,7 +37,9 @@ const updateMovieValidationSchema = z.object({
     languages: z.array(z.string()).optional(),
     description: z.string().optional(),
     releaseDate: z.string().optional(),
-    status: z.enum(['active', 'inactive'], { message: 'Invaild Status.' }),
+    status: z
+      .enum(['active', 'inactive'], { message: 'Invaild Status.' })
+      .optional(),
   }),
 });
 export const MovieValidation = {
