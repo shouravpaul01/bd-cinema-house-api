@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import { AppError } from '../../errors/AppError';
 import { TShowtime } from './showtime.interface';
 import { Showtime } from './showtime.model';
 
@@ -6,7 +8,9 @@ const createShowtimeIntroDB = async (payload: TShowtime) => {
   //If a movie already exists at the same showtime, send an error.Otherwise update showtimes
   if (await Showtime.isExistsMovieInSameDate(payload)) {
     if (await Showtime.isExistsTimeInSameDate(payload)) {
-      throw new Error(
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'showtimeExists',
         "Movie show schedules are already fixed. If you want to change the movie show times, click the 'Shows' button, then click the 'Edit' button for the movie, and finally, change the movie show times"
       );
     }
@@ -23,19 +27,33 @@ const createShowtimeIntroDB = async (payload: TShowtime) => {
 };
 
 //Fetched all Showtime data from DB
-const getAllShowtimeDB = async () => {
-  const result = await Showtime.find({});
-  return result;
+const getAllShowtimeDB = async (
+  page: number,
+  pageSize: number,
+  search: string | undefined
+) => {
+  const searchValue: Record<string, unknown> = {};
+  if (search) {
+    searchValue.date = search;
+  }
+  const totalCount = await Showtime.countDocuments();
+  const totalPages = Math.ceil(totalCount / pageSize);
+  const data = await Showtime.find(searchValue)
+    .sort({ date: 'desc' })
+    .skip((page - 1) * pageSize)
+    .limit(pageSize)
+    .populate('movie');
+
+  return { data, totalPages };
 };
 
 //Fetched a Showtime data by ID
 const getShowtimeByIdDB = async (ShowtimeId: string) => {
-  const result = await Showtime.findById(ShowtimeId);
+  const result = await Showtime.findById(ShowtimeId).populate('movie');
   return result;
 };
 const getEditDataDB = async (query: Record<string, unknown>) => {
   if (query?.showId && query?.timeTypePriceId) {
-    console.log(query.showId, query.time);
     const result = await Showtime.findById(
       { _id: query.showId },
       {
@@ -47,7 +65,7 @@ const getEditDataDB = async (query: Record<string, unknown>) => {
     return result;
   }
   if (query.showId) {
-    const result = await Showtime.findById(query.showId)
+    const result = await Showtime.findById({ _id: query.showId })
       .select('_id date movie')
       .populate('movie');
     return result;
@@ -58,7 +76,8 @@ const updateShowtimeIntroDB = async (
   query: Record<string, unknown>,
   payload: Partial<TShowtime>
 ) => {
-  if (query.timeTypePriceId) {
+  if (query?.timeTypePriceId) {
+    console.log('ff');
     const result = await Showtime.findOneAndUpdate(
       { _id: query.showId, 'showTimesTypesPrice._id': query.timeTypePriceId },
       { $set: { 'showTimesTypesPrice.$': payload?.showTimesTypesPrice[0] } },
@@ -108,6 +127,7 @@ const updateStatusShowtimeDB = async (showtimeId: string, status: string) => {
 
 //Get all active showtimes
 const getAllActiveShowtimeDateDB = async () => {
+  console.log('to');
   const result = await Showtime.distinct('date', { status: 'active' });
   return result;
 };

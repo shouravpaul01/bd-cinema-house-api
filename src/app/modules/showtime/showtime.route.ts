@@ -11,9 +11,11 @@ router.post(
   ShowTimeControllers.createShowtimeIntro
 );
 router.get('/', ShowTimeControllers.getAllShowtime);
-router.get('/:movieId', ShowTimeControllers.getShowtimeById);
+router.get('/edit-data', ShowTimeControllers.getEditData);
+router.get('/details/:showtimeId', ShowTimeControllers.getShowtimeById);
+
 router.patch(
-  '/:movieId',
+  '/',
   validateRequest(ShowtimeValidation.updateShowtimeValidationSchema),
   ShowTimeControllers.updateMovieIntro
 );

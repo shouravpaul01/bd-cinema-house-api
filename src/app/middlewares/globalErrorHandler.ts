@@ -4,6 +4,7 @@ import { TErrorSources, TGenericErrorResponse } from '../interface/error';
 import { handleZodErrors } from '../../errors/handleZodErrors';
 import { handleValidationError } from '../../errors/handleValidationError';
 import handleCastError from '../../errors/handleCastError';
+import { AppError } from '../errors/AppError';
 
 export const globalErrorHandler = (
   error: any,
@@ -11,8 +12,8 @@ export const globalErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  let statusCode = error.statusCode || 500;
-  let message = error.message || 'Something went to wrong.';
+  let statusCode = 500;
+  let message = 'Something went to wrong.';
   let errorSources: TErrorSources = [
     {
       path: '',
@@ -30,11 +31,28 @@ export const globalErrorHandler = (
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
-  } else if (error?.code == 11000) {
+  } else if (error?.name == 'CastError') {
     const simplifiedError = handleCastError(error);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
+  } else if (error instanceof AppError) {
+    statusCode = error?.statusCode;
+    message = error?.message;
+    errorSources = [
+      {
+        path: error?.path || '',
+        message: error.message,
+      },
+    ];
+  } else if (error instanceof Error) {
+    message = error?.message;
+    errorSources = [
+      {
+        path: '',
+        message: error.message,
+      },
+    ];
   }
   res.status(statusCode).json({
     status: false,

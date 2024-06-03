@@ -2,9 +2,6 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import { ShowtimeServices } from './showtime.service';
 import sendResponse from '../../utils/sendResponse';
-import handleFileUpload from '../../utils/handleFileUpload';
-import { UploadApiErrorResponse } from 'cloudinary';
-import { UploadApiResponse } from 'cloudinary';
 
 //Create a Movie
 const createShowtimeIntro = catchAsync(async (req, res) => {
@@ -19,7 +16,14 @@ const createShowtimeIntro = catchAsync(async (req, res) => {
 
 //Fetched All movie
 const getAllShowtime = catchAsync(async (req, res) => {
-  const result = await ShowtimeServices.getAllShowtimeDB();
+  const page = Number(req.query.page) || 1;
+  const pageSize = Number(req.query.pageSize) || 5;
+  const search = req.query.search;
+  const result = await ShowtimeServices.getAllShowtimeDB(
+    page,
+    pageSize,
+    search
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
@@ -35,7 +39,7 @@ const getShowtimeById = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
-    message: 'Successfully fetched Movie.',
+    message: 'Successfully fetched Movie.uu',
     data: result,
   });
 });
@@ -45,7 +49,7 @@ const getEditData = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
-    message: 'Successfully fetched Movie.',
+    message: 'Successfully fetched Movie.jj',
     data: result,
   });
 });
@@ -77,11 +81,11 @@ const deleteShowtime = catchAsync(async (req, res) => {
 
 //Update movie status.
 const updateStatusShowtime = catchAsync(async (req, res) => {
-  const { movieId } = req.params;
+  const { showtimeId } = req.params;
   const { status } = req.query;
 
   const result = await ShowtimeServices.updateStatusShowtimeDB(
-    movieId,
+    showtimeId,
     status as string
   );
   sendResponse(res, {
@@ -95,26 +99,49 @@ const updateStatusShowtime = catchAsync(async (req, res) => {
 //User Controller //
 
 const getAllActiveShowtimeDate = catchAsync(async (req, res) => {
+  console.log('go');
   const result = await ShowtimeServices.getAllActiveShowtimeDateDB();
-  return result;
+  console.log(result, 'result');
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Fetched ',
+    data: result,
+  });
 });
 
 //Fetched all active movies
 const getAllActiveMovies = catchAsync(async (req, res) => {
+  // console.log('go1');
   const result = await ShowtimeServices.getAllAciveMoviesDB(req.query);
-  return result;
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Fetched ',
+    data: result,
+  });
 });
 //Fetched all active movie by id
 const getAciveMovieById = catchAsync(async (req, res) => {
   const { showtimeId } = req.params;
   const result = await ShowtimeServices.getAciveMovieByIdDB(showtimeId);
-  return result;
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Fetched ',
+    data: result,
+  });
 });
 
 //Fetched active seat types for the movie
 const getAciveSeatTypes = catchAsync(async (req, res) => {
   const result = await ShowtimeServices.getAciveSeatTypesDB(req.query);
-  return result;
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Fetched ',
+    data: result,
+  });
 });
 export const ShowTimeControllers = {
   createShowtimeIntro,

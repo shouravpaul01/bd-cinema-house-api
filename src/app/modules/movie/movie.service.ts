@@ -18,7 +18,7 @@ const getAllMovieDB = async (
     searchValue.name = { $regex: search, $options: 'i' };
   }
   if (!search && !page) {
-    const result = await Movie.find({});
+    const result = await Movie.find({ status: 'active' });
     return result;
   }
 
@@ -60,7 +60,6 @@ const deleteMovieDB = async (movieId: string) => {
 
 //Update status 'active' || 'inactive' by ID
 const updateStatusMovieDB = async (movieId: string, payload: string) => {
-  console.log(payload);
   const result = await Movie.findOneAndUpdate(
     { _id: movieId },
     { status: payload },

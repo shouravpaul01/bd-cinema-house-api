@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { TMovie } from './movie.interface';
+import { AppError } from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const movieSchema = new Schema<TMovie>(
   {
@@ -62,4 +64,15 @@ const movieSchema = new Schema<TMovie>(
     timestamps: true,
   }
 );
+movieSchema.pre('save', async function (next) {
+  const isTitleExists = await Movie.findOne({ title: this.title });
+  if (isTitleExists) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'title',
+      'Aready the movie title is exists.'
+    );
+  }
+  next();
+});
 export const Movie = model<TMovie>('Movie', movieSchema);
