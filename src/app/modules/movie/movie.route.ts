@@ -11,4 +11,5 @@ router.get('/:movieId', MovieControllers.getMovieById);
 router.patch('/:movieId', singleFile, MovieControllers.updateMovieIntro);
 router.delete('/:movieId', MovieControllers.deleteMovie);
 router.patch('/update-status/:movieId', MovieControllers.updateStatusMovie);
+router.patch('/single-restore/:movieId', MovieControllers.singleRestore);
 export const MovieRoutes = router;

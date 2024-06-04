@@ -30,11 +30,14 @@ const createShowtimeIntroDB = async (payload: TShowtime) => {
 const getAllShowtimeDB = async (
   page: number,
   pageSize: number,
-  search: string | undefined
+  search: string | undefined,
+  isDeleted: boolean
 ) => {
   const searchValue: Record<string, unknown> = {};
   if (search) {
     searchValue.date = search;
+  } else if (isDeleted) {
+    searchValue.isDeleted = isDeleted;
   }
   const totalCount = await Showtime.countDocuments();
   const totalPages = Math.ceil(totalCount / pageSize);
@@ -105,6 +108,7 @@ const updateShowtimeIntroDB = async (
 
 //Soft delete Showtime data from DB
 const deleteShowtimeDB = async (showtimeId: string) => {
+  console.log(showtimeId, 'ser');
   const result = await Showtime.findOneAndUpdate(
     { _id: showtimeId },
     { isDeleted: true },
@@ -127,7 +131,6 @@ const updateStatusShowtimeDB = async (showtimeId: string, status: string) => {
 
 //Get all active showtimes
 const getAllActiveShowtimeDateDB = async () => {
-  console.log('to');
   const result = await Showtime.distinct('date', { status: 'active' });
   return result;
 };
@@ -157,7 +160,14 @@ const getAciveSeatTypesDB = async (query: Record<string, unknown>) => {
   ).populate('movie');
   return result;
 };
-
+const singleRestoreDB = async (showtimeId: string) => {
+  const result = await Showtime.findOneAndUpdate(
+    { _id: showtimeId },
+    { isDeleted: false },
+    { new: true }
+  );
+  return result;
+};
 export const ShowtimeServices = {
   createShowtimeIntroDB,
   getAllShowtimeDB,
@@ -170,4 +180,5 @@ export const ShowtimeServices = {
   getAllAciveMoviesDB,
   getAciveMovieByIdDB,
   getAciveSeatTypesDB,
+  singleRestoreDB,
 };

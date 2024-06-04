@@ -11,7 +11,7 @@ router.post(
   UserControllers.createUserIntro
 );
 router.get('/', UserControllers.getAllUser);
-router.get('/verify-email', UserControllers.getUserByEmail);
+router.post('/verify-email', UserControllers.getUserByEmail);
 router.patch('/update-role', UserControllers.updateUserRole);
 
 export const UserRoutes = router;

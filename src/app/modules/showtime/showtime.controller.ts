@@ -18,11 +18,13 @@ const createShowtimeIntro = catchAsync(async (req, res) => {
 const getAllShowtime = catchAsync(async (req, res) => {
   const page = Number(req.query.page) || 1;
   const pageSize = Number(req.query.pageSize) || 5;
+  const isDeleted = req?.query?.isDeleted || false;
   const search = req.query.search;
   const result = await ShowtimeServices.getAllShowtimeDB(
     page,
     pageSize,
-    search
+    search,
+    isDeleted
   );
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -69,8 +71,8 @@ const updateMovieIntro = catchAsync(async (req, res) => {
 
 //Soft delete showrime data.
 const deleteShowtime = catchAsync(async (req, res) => {
-  const { movieId } = req.params;
-  const result = await ShowtimeServices.deleteShowtimeDB(movieId);
+  const { showtimeId } = req.params;
+  const result = await ShowtimeServices.deleteShowtimeDB(showtimeId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
@@ -99,9 +101,7 @@ const updateStatusShowtime = catchAsync(async (req, res) => {
 //User Controller //
 
 const getAllActiveShowtimeDate = catchAsync(async (req, res) => {
-  console.log('go');
   const result = await ShowtimeServices.getAllActiveShowtimeDateDB();
-  console.log(result, 'result');
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
@@ -143,6 +143,16 @@ const getAciveSeatTypes = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const singleRestore = catchAsync(async (req, res) => {
+  const { showtimeId } = req.params;
+  const result = await ShowtimeServices.singleRestoreDB(showtimeId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Restore.',
+    data: result,
+  });
+});
 export const ShowTimeControllers = {
   createShowtimeIntro,
   getAllShowtime,
@@ -155,4 +165,5 @@ export const ShowTimeControllers = {
   getAllActiveMovies,
   getAciveMovieById,
   getAciveSeatTypes,
+  singleRestore,
 };

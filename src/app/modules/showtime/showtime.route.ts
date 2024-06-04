@@ -24,7 +24,7 @@ router.patch(
   '/update-status/:showtimeId',
   ShowTimeControllers.updateStatusShowtime
 );
-
+router.patch('/single-restore/:showtimeId', ShowTimeControllers.singleRestore);
 router.get(
   '/active-movie-show-date',
   ShowTimeControllers.getAllActiveShowtimeDate

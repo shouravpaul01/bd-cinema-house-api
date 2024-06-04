@@ -23,7 +23,7 @@
     "http-status": "^1.7.4",
     "mongoose": "^8.4.0",
     "multer": "^1.4.5-lts.1",
-    "sslcommerz-ts": "^0.0.4",
+    "sslcommerz-lts": "^1.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

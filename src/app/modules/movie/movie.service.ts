@@ -11,11 +11,14 @@ const createMovieIntroDB = async (payload: TMovie) => {
 const getAllMovieDB = async (
   search: string,
   page: number,
-  pageSize: number
+  pageSize: number,
+  isDeleted: boolean
 ) => {
   const searchValue: Record<string, unknown> = {};
   if (search) {
     searchValue.name = { $regex: search, $options: 'i' };
+  } else if (isDeleted) {
+    searchValue.isDeleted = isDeleted;
   }
   if (!search && !page) {
     const result = await Movie.find({ status: 'active' });
@@ -67,6 +70,15 @@ const updateStatusMovieDB = async (movieId: string, payload: string) => {
   );
   return result;
 };
+
+const singleRestoreDB = async (movieId: string) => {
+  const result = await Movie.findOneAndUpdate(
+    { _id: movieId },
+    { isDeleted: false },
+    { new: true }
+  );
+  return result;
+};
 export const MovieServices = {
   createMovieIntroDB,
   getAllMovieDB,
@@ -74,4 +86,5 @@ export const MovieServices = {
   updateMovieIntroDB,
   deleteMovieDB,
   updateStatusMovieDB,
+  singleRestoreDB,
 };

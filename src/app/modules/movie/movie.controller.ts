@@ -37,8 +37,14 @@ const createMovieIntro = catchAsync(async (req, res) => {
 const getAllMovie = catchAsync(async (req, res) => {
   const page = Number(req.query.page) || 1;
   const pageSize = Number(req.query.pageSize) || 10;
+  const isDeleted = req?.query?.isDeleted || false;
   const search = req.query.search;
-  const result = await MovieServices.getAllMovieDB(search, page, pageSize);
+  const result = await MovieServices.getAllMovieDB(
+    search,
+    page,
+    pageSize,
+    isDeleted
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     status: true,
@@ -81,7 +87,6 @@ const updateMovieIntro = catchAsync(async (req, res) => {
       url: cloudinaryResult.secure_url,
     };
   }
-  console.log(formData, movieId, req.file);
 
   const result = await MovieServices.updateMovieIntroDB(
     movieId,
@@ -123,6 +128,16 @@ const updateStatusMovie = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const singleRestore = catchAsync(async (req, res) => {
+  const { movieId } = req.params;
+  const result = await MovieServices.singleRestoreDB(movieId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    status: true,
+    message: 'Successfully Movie Restore.',
+    data: result,
+  });
+});
 export const MovieControllers = {
   createMovieIntro,
   getAllMovie,
@@ -130,4 +145,5 @@ export const MovieControllers = {
   updateMovieIntro,
   deleteMovie,
   updateStatusMovie,
+  singleRestore,
 };

@@ -29,7 +29,7 @@ const getAllUser = catchAsync(async (req, res) => {
   });
 });
 const getUserByEmail = catchAsync(async (req, res) => {
-  const { email } = req.query;
+  const { email } = req.body;
   const result = await UserServices.getUserByEmailDB(email as string);
   sendResponse(res, {
     statusCode: httpStatus.OK,
