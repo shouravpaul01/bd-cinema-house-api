@@ -61,7 +61,6 @@ showtimesSchema.static(
   async function (payload: TShowtime) {
     const timeExists = await Showtime.findOne({
       date: payload.date,
-      movie: payload.movie,
       showTimesTypesPrice: {
         $elemMatch: { time: payload?.showTimesTypesPrice[0]?.time },
       },

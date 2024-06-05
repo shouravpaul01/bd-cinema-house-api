@@ -7,11 +7,9 @@ const bookingSchema = new Schema(
     },
     name: {
       type: String,
-      required: true,
     },
     phoneNumber: {
       type: Number,
-      required: true,
     },
     movie: {
       type: mongoose.Schema.Types.ObjectId,

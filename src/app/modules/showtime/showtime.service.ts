@@ -92,7 +92,9 @@ const updateShowtimeIntroDB = async (
 
   if (await Showtime.isExistsMovieInSameDate(payload)) {
     if (await Showtime.isExistsTimeInSameDate(payload)) {
-      throw new Error(
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'showtimeExists',
         'The movie show schedule is already fixed. Please set a different showtime.'
       );
     }

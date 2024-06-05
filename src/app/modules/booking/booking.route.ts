@@ -3,12 +3,16 @@ import { BookingController } from './booking.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { BookingValidation } from './booking.validation';
 const router = express.Router();
-router.post('/create-booking', BookingController.createBookingIntro);
+router.post(
+  '/create-booking',
+  validateRequest(BookingValidation.createBookingValidationSchema),
+  BookingController.createBookingIntro
+);
 router.delete('/', BookingController.deleteBooking);
 router.patch('/:bookingId', BookingController.updateBookingIntro);
 router.patch(
   '/purchase-confirm/:bookingId',
-  validateRequest(BookingValidation.createBookingValidationSchema),
+  validateRequest(BookingValidation.createBookingConfirmValidationSchema),
   BookingController.bookingConfirm
 );
 router.post('/payment/success/:bookingId', BookingController.paymentSuccess);
